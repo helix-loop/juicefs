@@ -44,7 +44,7 @@ jobs:
           juicefs_version=$(./juicefs -V|cut -b 17-)
           echo bandwidth, created_date, github_revision, workflow_url, juicefs_version, name, ref_name > $csv_file
           default_size=256M
-          max_used=10
+          warning_value=10
           fio_jobs=(
             "big-file-sequential-read:      --rw=read --refill_buffers --bs=256k --size=${default_size}" \
             "big-file-sequential-write:     --rw=write --refill_buffers --bs=256k --size=${default_size}" \
@@ -99,8 +99,8 @@ jobs:
               mc rb  myminio/$name --force --dangerous || printf "Warining; remove bucket failed: %s, exit code: %s\n" "myminio/$name" "$?"
               while true; do
                 used=$(df -h /mnt/minio/data1  | awk 'NR>1 {gsub(/%/,""); print $5}') 
-                if [ $used > $max_used ]; then
-                  echo "sleep 10s"
+                if [ $used -gt $warning_value ]; then
+                  printf "disk used %s%%, sleep 10s\n" "$used"
                   sleep 10s
                 else
                   break
