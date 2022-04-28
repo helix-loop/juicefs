@@ -107,7 +107,7 @@ jobs:
                 fio_arg=$(echo $job | awk -F: '{print $2}' | xargs)
                 mount_arg=$(echo $job | awk -F: '{print $3}' | xargs)
                 minio_url=http://172.27.0.2:9005/$name
-                mc rb  myminio/$name --force --dangerous || printf "Warining; remove bucket failed: %s, exit code: %s\n" "myminio/$name" "$?"
+                mc ls myminio/$name && mc rb  myminio/$name --force --dangerous || printf "Warining; remove bucket failed: %s, exit code: %s\n" "myminio/$name" "$?"
                 while true; do
                   used=$(df -h /mnt/minio/data1  | awk 'NR>1 {gsub(/%/,""); print $5}') 
                   if [ $used -gt $warning_value ]; then
