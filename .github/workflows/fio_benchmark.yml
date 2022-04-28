@@ -98,7 +98,7 @@ jobs:
               minio_url=http://172.27.0.2:9005/$name
               mc rb  myminio/$name --force --dangerous || printf "Warining; remove bucket failed: %s, exit code: %s" "myminio/$name" "$?"
               while true; do
-                used=$(df -h /mnt/minio/data1  | awk 'NR>1 {gsub(/G/,""); print $4}') 
+                used=$(df -h /mnt/minio/data1  | awk 'NR>1 {gsub(/%/,""); print $5}') 
                 if [ used > $max_used ]; then
                   echo "sleep 10s"
                   sleep 10s
