@@ -43,7 +43,7 @@ jobs:
         run: |
           csv_file=/var/lib/mysql-files/result.csv
           echo bandwidth, created_date, github_revision, workflow_url, juicefs_version, name, ref_name > $csv_file
-          default_size=128M
+          default_size=16M
           warning_value=90
           fio_jobs=(
             "big-file-sequential-read:      --rw=read --refill_buffers --bs=256k --size=${default_size}" \
