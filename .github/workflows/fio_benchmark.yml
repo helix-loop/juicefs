@@ -99,7 +99,7 @@ jobs:
               mc rb  myminio/$name --force --dangerous || printf "Warining; remove bucket failed: %s, exit code: %s\n" "myminio/$name" "$?"
               while true; do
                 used=$(df -h /mnt/minio/data1  | awk 'NR>1 {gsub(/%/,""); print $5}') 
-                if [ used > $max_used ]; then
+                if [ $used > $max_used ]; then
                   echo "sleep 10s"
                   sleep 10s
                 else
