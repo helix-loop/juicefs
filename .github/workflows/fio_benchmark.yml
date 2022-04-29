@@ -41,7 +41,7 @@ jobs:
 
       - name: Fio Benchmark 
         run: |
-          default_size=10M
+          default_size=1M
           warning_value=90
           fio_jobs=(
             "big-file-sequential-read:      --rw=read --refill_buffers --bs=256k --size=${default_size}" \
@@ -90,7 +90,7 @@ jobs:
           for url in "${urls[@]}"; do
             csv_file=/var/lib/mysql-files/result.csv
             test -f $csv_file  && rm $csv_file -f
-            if [ $url == http* ]; then  
+            if [[ $url == http* ]]; then  
               rm juicefs 
               echo download url is: $url
               wget -q $url
