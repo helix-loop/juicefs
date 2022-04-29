@@ -41,7 +41,7 @@ jobs:
 
       - name: Fio Benchmark 
         run: |
-          default_size=1M
+          default_size=1G
           warning_value=90
           fio_jobs=(
             "big-file-sequential-read:      --rw=read --refill_buffers --bs=256k --size=${default_size}" \
