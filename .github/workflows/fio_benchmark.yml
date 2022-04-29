@@ -90,7 +90,7 @@ jobs:
           for url in "${urls[@]}"; do
             csv_file=/var/lib/mysql-files/result.csv
             test -f $csv_file  && rm $csv_file -f
-            if [ url == http* ]; then  
+            if [ $url == http* ]; then  
               rm juicefs 
               echo download url is: $url
               wget -q $url
@@ -129,7 +129,7 @@ jobs:
                 fi
                 fio --name=$name --directory=${{ steps.vars.outputs.MOUNT_POINT }} $fio_arg > result.log
                 bw=$(tail -1 result.log | awk '{print $2}' | awk -F '=' '{print $2}' | cut -b 1,-3)
-                echo $bw, $(date +"%Y-%m-%d %H:%M:%S"), ${{github.sha}}, https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}, $juicefs_version, $name, ${{ github.ref_name }} | tee -a $csv_file
+                echo $bw, $(date +"%Y-%m-%d %H:%M:%S"), ${{github.sha}}, https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}, $juicefs_version, $name, ${{ github.ref_name }}, $default_size, redis, minio | tee -a $csv_file
                 
                 ./juicefs umount -f ${{ steps.vars.outputs.MOUNT_POINT }}
                 UUID=$(./juicefs status ${{ steps.vars.outputs.META_URL }} | grep UUID | cut -d '"' -f 4)
@@ -140,7 +140,7 @@ jobs:
                 set +x
               fi
             done
-            mysql -h 172.27.0.1 -u root -p${{secrets.MYSQL_PASSWORD}} -e "use  test_result; LOAD DATA INFILE '/var/lib/mysql-files/result.csv' INTO TABLE fio_test FIELDS TERMINATED BY ',' (bandwidth, created_date, github_revision, workflow_url, juicefs_version, name, ref_name); " 
+            mysql -h 172.27.0.1 -u root -p${{secrets.MYSQL_PASSWORD}} -e "use  test_result; LOAD DATA INFILE '/var/lib/mysql-files/result.csv' INTO TABLE fio_test FIELDS TERMINATED BY ',' (bandwidth, created_date, github_revision, workflow_url, juicefs_version, name, ref_name, size, meta_engine, storage); " 
           done
           
 
